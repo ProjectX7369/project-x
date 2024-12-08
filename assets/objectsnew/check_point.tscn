@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://c7fs6t25iahye"]
+
+[ext_resource type="PackedScene" uid="uid://dtjvjdjl8cs6e" path="res://assets/models/flag.glb" id="1_7857a"]
+[ext_resource type="Script" path="res://assets/objectsnew/check_point.gd" id="1_sw8c5"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rkrjp"]
+size = Vector3(6, 5, 6)
+
+[node name="CheckPoint" type="Area3D"]
+script = ExtResource("1_sw8c5")
+
+[node name="flag" parent="." instance=ExtResource("1_7857a")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.48877, 0)
+shape = SubResource("BoxShape3D_rkrjp")
+
+[node name="Timer" type="Timer" parent="."]
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
