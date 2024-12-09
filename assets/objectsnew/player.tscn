@@ -1,8 +1,9 @@
-[gd_scene load_steps=24 format=4 uid="uid://ct6c1y3u2qpe7"]
+[gd_scene load_steps=25 format=4 uid="uid://ct6c1y3u2qpe7"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_7vn2a"]
 [ext_resource type="Texture2D" uid="uid://0odt7cvj574e" path="res://assets/models/Textures/colormap.png" id="1_hm2er"]
 [ext_resource type="Texture2D" uid="uid://8ggihh27mlrr" path="res://assets/sprites/blob_shadow.png" id="3_gff4f"]
+[ext_resource type="PackedScene" uid="uid://c5spso4x0ayjj" path="res://assets/objectsnew/robot.tscn" id="4_fr21r"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_fobs2"]
 radius = 0.271599
@@ -566,6 +567,9 @@ skeleton = NodePath("")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
 mesh = SubResource("ArrayMesh_3q80x")
 skeleton = NodePath("")
+
+[node name="Robot" parent="character" instance=ExtResource("4_fr21r")]
+transform = Transform3D(-0.4, 0, -6.03983e-08, 0, 0.4, 2.98023e-08, 6.03983e-08, 2.98023e-08, -0.4, 0, 0.2, -0.427754)
 
 [node name="CameraPivot" type="Node3D" parent="."]
 unique_name_in_owner = true
