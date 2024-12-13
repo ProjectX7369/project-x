@@ -93,13 +93,13 @@ func _physics_process(delta: float) -> void:
 	if is_starting_jump:
 		_animation_player.play("jum")
 	elif not is_on_floor() and velocity.y < 0:
-		_animation_player.play("idle")
+		_animation_player.play("Idle")
 	elif is_on_floor():
 		jump_single = true
 		if ground_speed > 0.0 :
-			_animation_player.play("correrenpared")
+			_animation_player.play("negroatrascorre")
 		else:
-			_animation_player.play("idle")
+			_animation_player.play("Idle")
 	move_and_slide()
 	respawn_player()
 	is_wall_collider(move_direction, delta)
