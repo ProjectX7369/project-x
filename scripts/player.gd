@@ -17,7 +17,7 @@ extends CharacterBody3D
 @onready var _camera_pivot: Node3D = %CameraPivot
 @onready var _camera: Camera3D = %Camera3D
 @onready var _skin = %character
-@onready var _animation_player = %AnimationPlayer
+@onready var _animation_player: AnimationPlayer = %AnimationPlayer
 @onready var _spring_arm = $CameraPivot/SpringArm3D
 @onready var _wall_detector = %WallDetector
 
@@ -91,13 +91,13 @@ func _physics_process(delta: float) -> void:
 	
 	var ground_speed := Vector2(velocity.x, velocity.z).length()
 	if is_starting_jump:
-		_animation_player.play("jump")
+		_animation_player.play("jum")
 	elif not is_on_floor() and velocity.y < 0:
-		_animation_player.play("static")
+		_animation_player.play("idle")
 	elif is_on_floor():
 		jump_single = true
 		if ground_speed > 0.0 :
-			_animation_player.play("walk")
+			_animation_player.play("correrenpared")
 		else:
 			_animation_player.play("idle")
 	move_and_slide()
