@@ -31,7 +31,6 @@ var jump_single = true
 var jump_double = true
 
 
-
 func _ready() -> void:
 	_animation_player.stop()
 	
@@ -97,7 +96,7 @@ func _physics_process(delta: float) -> void:
 	elif is_on_floor():
 		jump_single = true
 		if ground_speed > 0.0 :
-			_animation_player.play("negroatrascorre")
+			_animation_player.play("Run")
 		else:
 			_animation_player.play("Idle")
 	move_and_slide()
@@ -108,9 +107,11 @@ func respawn_player():
 		self.global_position = GameManager.respawn
 func is_wall_collider(dir, delta):
 	if _wall_detector.is_colliding():
+		_animation_player.play("correrenpared")
 		velocity.y = -_wall_friction * delta
 		if Input.is_action_just_pressed("ui_accept"):
 			velocity.y = 10 + _wall_force_jump * delta
+			
 		move_and_slide()
 
 func _is_jumping():
