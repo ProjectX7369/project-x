@@ -12,7 +12,7 @@ extends CharacterBody3D
 @export var acceleration := 20.0
 @export var rotation_speed := 12.0
 @export var stopping_speed := 1.0
-@export var jump_impulse := 12.0
+@export var jump_impulse := 18.0
 
 @onready var _camera_pivot: Node3D = %CameraPivot
 @onready var _camera: Camera3D = %Camera3D
@@ -28,7 +28,7 @@ var zoom = 6
 var _wall_friction := 20
 var _wall_force_jump := 20
 var jump_single = true
-var jump_double = true
+#var jump_double = true
 
 
 func _ready() -> void:
@@ -77,7 +77,7 @@ func _physics_process(delta: float) -> void:
 	# Jumping
 	var is_starting_jump := Input.is_action_just_pressed("ui_accept")
 	if is_starting_jump:
-		if jump_single or jump_double:
+		if jump_single: #or jump_double:
 			_is_jumping()
 	
 	
@@ -91,8 +91,9 @@ func _physics_process(delta: float) -> void:
 	var ground_speed := Vector2(velocity.x, velocity.z).length()
 	if is_starting_jump:
 		_animation_player.play("jum")
-	elif not is_on_floor() and velocity.y < 0:
-		_animation_player.play("Idle")
+	elif not is_on_floor() and velocity.y < -18:
+		_animation_player.play("caidalibre")
+	
 	elif is_on_floor():
 		jump_single = true
 		if ground_speed > 0.0 :
@@ -117,8 +118,9 @@ func is_wall_collider(dir, delta):
 func _is_jumping():
 	Audio.play("res://assets/sounds/jump.ogg")
 	velocity.y += jump_impulse
-	if jump_single:
+	jump_single = false
+	"""if jump_single:
 		jump_single = false
-		jump_double = true
+	jump_double = true
 	else:
-		jump_double = false
+		jump_double = false"""
