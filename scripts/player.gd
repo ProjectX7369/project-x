@@ -19,8 +19,9 @@ extends CharacterBody3D
 @onready var _skin = %character
 @onready var _animation_player: AnimationPlayer = %AnimationPlayer
 @onready var _spring_arm = $CameraPivot/SpringArm3D
-@onready var _wall_detector = %WallDetector
+@onready var _wall_detector: RayCast3D = %WallDetector
 @onready var timer = $Timer
+@onready var _wall_detector_2: RayCast3D = $WallDetector2
 
 
 var _camera_input_direction := Vector2.ZERO
@@ -86,7 +87,7 @@ func _physics_process(delta: float) -> void:
 	var target_angle := Vector3.BACK.signed_angle_to(_last_movement_direction, Vector3.UP)
 	_skin.global_rotation.y = lerp_angle(_skin.rotation.y, target_angle, rotation_speed * delta)
 	_wall_detector.global_rotation.y = lerp_angle(_wall_detector.rotation.y, target_angle, rotation_speed * delta)
-	
+	_wall_detector_2.global_rotation.y = lerp_angle(_wall_detector_2.rotation.y, target_angle, rotation_speed * delta)
 	var ground_speed := Vector2(velocity.x, velocity.z).length()
 	if is_starting_jump:
 		_animation_player.play("jum")
@@ -109,7 +110,7 @@ func respawn_player():
 	if position.y < -10:
 		self.global_position = GameManager.respawn
 func is_wall_collider(dir, delta):
-	if _wall_detector.is_colliding():
+	if _wall_detector.is_colliding() or _wall_detector_2.is_colliding():
 		
 		if !is_on_floor():
 			_animation_player.play("correrenpared")

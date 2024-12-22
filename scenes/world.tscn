@@ -3440,6 +3440,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 65, -1, 36)
 script = ExtResource("3_63psl")
 mesh_vector_data = SubResource("Resource_qi1mb")
 materials = Array[Material]([ExtResource("8_4t50c")])
+collision_layer = 3
 
 [node name="Block_1" type="Node3D" parent="EnviromentCyclops/CyclopsBlocks"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 35, 9, 49)
@@ -3452,6 +3453,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 65, -5, 40)
 script = ExtResource("3_63psl")
 mesh_vector_data = SubResource("Resource_stl1e")
 materials = Array[Material]([ExtResource("8_4t50c")])
+collision_layer = 3
 
 [node name="Block_10" type="Node3D" parent="EnviromentCyclops/CyclopsBlocks"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 80, -5, 140)
