@@ -112,6 +112,7 @@ func respawn_player():
 func is_wall_collider(dir, delta):
 	if _wall_detector.is_colliding() or _wall_detector_2.is_colliding():
 		
+		
 		if !is_on_floor():
 			_animation_player.play("correrenpared")
 			velocity.y = -_wall_friction * delta
