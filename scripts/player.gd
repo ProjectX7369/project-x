@@ -3,7 +3,7 @@ extends CharacterBody3D
 @export_group("Camera")
 @export_range(0.0, 1.0) var mouse_sensitivity := 0.25
 @export var tilt_upper_limit := PI / 3.0
-@export var tilt_lower_limit := -0.1
+@export var tilt_lower_limit := -0.1 
 @export var zoom_minimum = 8
 @export var zoom_maximum = 2
 
@@ -20,6 +20,8 @@ extends CharacterBody3D
 @onready var _animation_player: AnimationPlayer = %AnimationPlayer
 @onready var _spring_arm = $CameraPivot/SpringArm3D
 @onready var _wall_detector = %WallDetector
+@onready var timer = $Timer
+
 
 var _camera_input_direction := Vector2.ZERO
 var _last_movement_direction := Vector3.BACK
@@ -28,8 +30,7 @@ var zoom = 6
 var _wall_friction := 20
 var _wall_force_jump := 20
 var jump_single = true
-#var jump_double = true
-
+var can_jumwall := true
 
 func _ready() -> void:
 	_animation_player.stop()
@@ -52,6 +53,7 @@ func _physics_process(delta: float) -> void:
 	_camera_pivot.rotation.y += _camera_input_direction.x * delta
 	_camera_input_direction = Vector2.ZERO
 	
+	
 	if Input.is_action_just_pressed("zoom_in") and zoom >= zoom_maximum: # Acercar 
 		zoom -= 1
 		_spring_arm.spring_length = zoom
@@ -73,14 +75,11 @@ func _physics_process(delta: float) -> void:
 	if is_equal_approx(move_direction.length_squared(), 0.0) and velocity.length_squared() < stopping_speed:
 		velocity = Vector3.ZERO
 	velocity.y = y_velocity + _gravity * delta
-	
 	# Jumping
 	var is_starting_jump := Input.is_action_just_pressed("ui_accept")
-	if is_starting_jump:
+	if is_starting_jump and is_on_floor():
 		if jump_single: #or jump_double:
 			_is_jumping()
-	
-	
 	# Rotation 
 	if move_direction.length() > 0.2:
 		_last_movement_direction = move_direction
@@ -91,7 +90,7 @@ func _physics_process(delta: float) -> void:
 	var ground_speed := Vector2(velocity.x, velocity.z).length()
 	if is_starting_jump:
 		_animation_player.play("jum")
-	elif not is_on_floor() and velocity.y < -18:
+	elif not is_on_floor() and velocity.y < -15 :
 		_animation_player.play("caidalibre")
 	
 	elif is_on_floor():
@@ -101,26 +100,29 @@ func _physics_process(delta: float) -> void:
 		else:
 			_animation_player.play("Idle")
 	move_and_slide()
-	respawn_player()
+	respawn_player()	
+	if !can_jumwall:
+		return
 	is_wall_collider(move_direction, delta)
+	
 func respawn_player():
 	if position.y < -10:
 		self.global_position = GameManager.respawn
 func is_wall_collider(dir, delta):
 	if _wall_detector.is_colliding():
-		_animation_player.play("correrenpared")
-		velocity.y = -_wall_friction * delta
+		
+		if !is_on_floor():
+			_animation_player.play("correrenpared")
+			velocity.y = -_wall_friction * delta
 		if Input.is_action_just_pressed("ui_accept"):
-			velocity.y = 10 + _wall_force_jump * delta
-			
+			_animation_player.play("jum")
+			velocity.y = jump_impulse +_wall_force_jump * delta
+			can_jumwall = false
+			timer.start()
 		move_and_slide()
-
 func _is_jumping():
 	Audio.play("res://assets/sounds/jump.ogg")
 	velocity.y += jump_impulse
 	jump_single = false
-	"""if jump_single:
-		jump_single = false
-	jump_double = true
-	else:
-		jump_double = false"""
+func  _on_timer_timeout():
+	can_jumwall = true
