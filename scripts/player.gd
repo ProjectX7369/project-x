@@ -149,3 +149,4 @@ func  _inpulso_unico():
 		velocity.z = inpulso.z * 20
 		move_and_slide()
 		
+# TODO cristian deberia de verla
