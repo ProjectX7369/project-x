@@ -23,7 +23,6 @@ extends CharacterBody3D
 @onready var timer = $Timer
 @onready var _wall_detector_2: RayCast3D = $WallDetector2
 
-
 var _camera_input_direction := Vector2.ZERO
 var _last_movement_direction := Vector3.BACK
 var _gravity := -30.0
@@ -32,6 +31,11 @@ var _wall_friction := 20
 var _wall_force_jump := 20
 var jump_single = true
 var can_jumwall := true
+var inpulso_unico := false
+var is_starting_jump := false
+var inpulso := Vector3.ZERO
+
+
 
 func _ready() -> void:
 	_animation_player.stop()
@@ -53,7 +57,7 @@ func _physics_process(delta: float) -> void:
 	_camera_pivot.rotation.x = clamp(_camera_pivot.rotation.x, tilt_lower_limit, tilt_upper_limit)
 	_camera_pivot.rotation.y += _camera_input_direction.x * delta
 	_camera_input_direction = Vector2.ZERO
-	
+	is_starting_jump = Input.is_action_just_pressed("ui_accept")
 	
 	if Input.is_action_just_pressed("zoom_in") and zoom >= zoom_maximum: # Acercar 
 		zoom -= 1
@@ -77,10 +81,11 @@ func _physics_process(delta: float) -> void:
 		velocity = Vector3.ZERO
 	velocity.y = y_velocity + _gravity * delta
 	# Jumping
-	var is_starting_jump := Input.is_action_just_pressed("ui_accept")
+	is_starting_jump
 	if is_starting_jump and is_on_floor():
 		if jump_single: #or jump_double:
 			_is_jumping()
+	
 	# Rotation 
 	if move_direction.length() > 0.2:
 		_last_movement_direction = move_direction
@@ -89,6 +94,15 @@ func _physics_process(delta: float) -> void:
 	_wall_detector.global_rotation.y = lerp_angle(_wall_detector.rotation.y, target_angle, rotation_speed * delta)
 	_wall_detector_2.global_rotation.y = lerp_angle(_wall_detector_2.rotation.y, target_angle, rotation_speed * delta)
 	var ground_speed := Vector2(velocity.x, velocity.z).length()
+# el inpulso hacia delante despues de dar espacio
+	inpulso = _skin.global_transform.basis.z.normalized()
+	if is_on_floor() or (_wall_detector.is_colliding() or _wall_detector_2.is_colliding()):
+		inpulso_unico = true
+	_inpulso_unico()
+	if !is_on_floor() and  is_starting_jump:
+		inpulso_unico = false
+		
+#saltar
 	if is_starting_jump:
 		_animation_player.play("jum")
 	elif not is_on_floor() and velocity.y < -15 :
@@ -112,13 +126,14 @@ func respawn_player():
 func is_wall_collider(dir, delta):
 	if _wall_detector.is_colliding() or _wall_detector_2.is_colliding():
 		
-		
 		if !is_on_floor():
 			_animation_player.play("correrenpared")
 			velocity.y = -_wall_friction * delta
-		if Input.is_action_just_pressed("ui_accept"):
+		if is_starting_jump:
 			_animation_player.play("jum")
 			velocity.y = jump_impulse +_wall_force_jump * delta
+			if inpulso_unico and is_starting_jump:
+				inpulso_unico = false
 			can_jumwall = false
 			timer.start()
 		move_and_slide()
@@ -128,3 +143,9 @@ func _is_jumping():
 	jump_single = false
 func  _on_timer_timeout():
 	can_jumwall = true
+func  _inpulso_unico():
+	if (is_starting_jump and !is_on_floor()) and inpulso_unico:
+		velocity.x = inpulso.x * 20 
+		velocity.z = inpulso.z * 20
+		move_and_slide()
+		
