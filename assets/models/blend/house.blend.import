@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://dr2i4nmnxui2o"
-path="res://.godot/imported/krilin.blend-2faadbc77ca5271fc69098efe1591504.scn"
+uid="uid://dq7lmcmobo54m"
+path="res://.godot/imported/house.blend-ba8e4c5b156d133a190408748ba4803b.scn"
 
 [deps]
 
-source_file="res://assets/models/blend/krilin.blend"
-dest_files=["res://.godot/imported/krilin.blend-2faadbc77ca5271fc69098efe1591504.scn"]
+source_file="res://assets/models/blend/house.blend"
+dest_files=["res://.godot/imported/house.blend-ba8e4c5b156d133a190408748ba4803b.scn"]
 
 [params]
 

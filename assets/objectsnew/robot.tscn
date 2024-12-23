@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://c5spso4x0ayjj"]
+
+[ext_resource type="PackedScene" uid="uid://cb537ei7infe1" path="res://assets/models/blend/robot.blend" id="1_lgowu"]
+
+[node name="Robot" type="Node3D"]
+
+[node name="robot" parent="." instance=ExtResource("1_lgowu")]
